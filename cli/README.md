@@ -39,20 +39,26 @@ TAGGING_IMAGE_DIR=${TAGGING:TAGGING_LOCATION}/AllImages
 
 `TAGGING_LOCATION` is the location on the user's machine where media will be downloaded
 `TAGGING_USER` is your username.
-`TAGGING_IMAGE_DIR` is the location where images will be downloaded, usually /AllImages folder inside tagging_location. 
+`TAGGING_IMAGE_DIR` is the location where images will be downloaded, usually /AllImages folder inside tagging_location.
 
 `TAGGING_IMAGE_DIR` is the location where all images will be downloaded to for training
 `TAGGED_OUTPUT` is the location of the CSV file that will have human labelled data
 
 ### Commands
 
-#### Initialize a dataset/Onboard an existing dataset.
+#### Initialize a dataset
+
+##### Existing Dataset from the file system.
 
 Usage: `python3 -m cli.cli onboard -f /path/to/images/`
 
-Assuming your directory `/path/to/images` is a flat directory of images, you can use this CLI invocation to upload your images to a temporary storage container.
+You can use this CLI invocation to upload images on your local file system to a temporary storage container, and onboard them into your dataset. *
 
-The onboarding function is then invoked, processing your images into the database, making them available for downloading.
+##### Existing Dataset already stored in a blob storage container
+
+Usage: `python3 -m cli.cli onboard -a MyStorageAccount -c MyStorageContainer -k MyStorageAccountKey`
+
+You can use this CLI invocation to onboard images that are already in a storage account and onboard them into your dataset.
 
 #### Download
 

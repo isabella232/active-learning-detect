@@ -97,7 +97,7 @@ def onboard_folder(config, folder_name):
         config,
         config.get('storage_account'),
         config.get('storage_key'),
-        config.get('storage_container')
+        config.get('storage_temp_container')
     )
 
 

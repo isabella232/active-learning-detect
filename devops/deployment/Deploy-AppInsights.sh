@@ -4,7 +4,8 @@
 set -e
 
 ResourceGroup=$1	
-AppInsightsName=$2
+ResourceLocation=$2
+AppInsightsName=$3
 
 # Check if any of the args are empty
 if [ -z "$1" ] || [ -z "$2" ]; then
@@ -16,5 +17,5 @@ az resource create \
     --resource-group $ResourceGroup \
     --resource-type "Microsoft.Insights/components" \
     --name $AppInsightsName \
-    --location WestUS2 \
+    --location $ResourceLocation \
     --properties '{"Application_Type":"other", "Flow_Type":"Redfield", "Request_Source":"IbizaAIExtension","HockeyAppId": null,"SamplingPercentage": null}'

@@ -6,24 +6,25 @@
 set -e
 
 ResourceGroup=$1
-StorageName=$2
-FunctionAppName=$3
-AppInsightsName=$4
+ResourceLocation=$2
+StorageName=$3
+FunctionAppName=$4
+AppInsightsName=$5
 
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ] || [ -z "$9" ] || [ -z "${10}" ] || [ -z "${11}" ] || [ -z "${12}" ] || [ -z "${13}" ]; then
-    echo "Usage: sh $0 (Azure Resource Group Name) (Azure Function Storage Name) (Azure Function App Name) (AppInsightsName) (Storage account) (Source container) (Dest container) (DB Server Name) (DB Username) (DB Password) (DB Name) (Storage Connection String)"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ] || [ -z "$9" ] || [ -z "${10}" ] || [ -z "${11}" ] || [ -z "${12}" ] || [ -z "${13}" ] || [ -z "${14}" ]; then
+    echo "Usage: sh $0 (Azure Resource Group Name) (Azure Resource Group Location) (Azure Function Storage Name) (Azure Function App Name) (AppInsightsName) (Storage account) (Source container) (Dest container) (DB Server Name) (DB Username) (DB Password) (DB Name) (Storage Connection String)"
     exit 1
 fi
 
-STORAGE_ACCOUNT_NAME="$5"
-STORAGE_ACCOUNT_KEY="$6"
-SOURCE_CONTAINER_NAME="$7"
-DESTINATION_CONTAINER_NAME="$8"
-DB_HOST="$9"
-DB_USER="${10}"
-DB_PASS="${11}"
-DB_NAME="${12}"
-STORAGE_CONNECTION_STRING="${13}"
+STORAGE_ACCOUNT_NAME="$6"
+STORAGE_ACCOUNT_KEY="$7"
+SOURCE_CONTAINER_NAME="$8"
+DESTINATION_CONTAINER_NAME="$9"
+DB_HOST="${10}"
+DB_USER="${11}"
+DB_PASS="${12}"
+DB_NAME="${13}"
+STORAGE_CONNECTION_STRING="${14}"
 
 StorageNameLength=${#StorageName}
 if [ $StorageNameLength -lt 3 -o $StorageNameLength -gt 24 ]; then
@@ -61,17 +62,17 @@ az extension add --yes --source $TempDownloadLocation
 echo
 echo "Create a resource group (if it does not exist for the current subscription)"
 echo
-az group create -n $ResourceGroup -l "WestUS"
+az group create -n $ResourceGroup -l $ResourceLocation
 
 echo
 echo "Create a storage account for the function (if it does not exist for the current subscription)"
 echo
-az storage account create -n $StorageName -l "WestUS" -g $ResourceGroup --sku Standard_LRS
+az storage account create -n $StorageName -l $ResourceLocation -g $ResourceGroup --sku Standard_LRS
 
 echo
 echo "Create a function app (if it does not exist for the current subscription)"
 echo
-az functionapp createpreviewapp -n $FunctionAppName -g $ResourceGroup -l "WestUS" -s $StorageName --runtime python --is-linux
+az functionapp createpreviewapp -n $FunctionAppName -g $ResourceGroup -l $ResourceLocation-s $StorageName --runtime python --is-linux
 
 echo
 echo "Retrieving App Insights Id for $AppInsightsName"

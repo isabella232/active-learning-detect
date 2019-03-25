@@ -4,13 +4,14 @@
 set -e
 
 ResourceGroup=$1
-ServerName=$2
-DBUserName=$3
-DBPassword=$4
+ResourceLocation$2
+ServerName=$3
+DBUserName=$4
+DBPassword=$5
 Local_IP_Address=$(curl -s http://whatismyip.akamai.com/)
 
 # Check if any of the args are empty
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
     echo "Usage: 'sh $0 (Azure Resource Group Name) (PostGres ServerName) (PostGres UserName) (PostGres Password)'"
     exit 1
 fi
@@ -37,7 +38,7 @@ echo "Create a resource group (if it does not exist for the current subscription
 echo
 az group create \
     --name $ResourceGroup \
-    --location westus
+    --location $ResourceLocation
 
 echo
 echo "Create an Azure Postgres host on the cheapest SKU. This may take SEVERAL MINUTES..."
@@ -45,7 +46,7 @@ echo
 az postgres server create \
     --resource-group $ResourceGroup \
     --name $ServerName \
-    --location westus \
+    --location $ResourceLocation \
     --admin-user $DBUserName \
     --admin-password $DBPassword \
     --sku-name B_Gen5_2 \

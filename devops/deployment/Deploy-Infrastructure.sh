@@ -69,7 +69,7 @@ else
         az postgres server delete -g $RESOURCE_GROUP -n $DATABASE_SERVER_NAME -y
     fi
     echo "Entering deployment of PostgreSQL server $DATABASE_SERVER_NAME"
-    . ./Deploy-Postgres-DB.sh $RESOURCE_GROUP $DATABASE_SERVER_NAME "$DATABASE_USERNAME" $DATABASE_PASSWORD
+    . ./Deploy-Postgres-DB.sh $RESOURCE_GROUP $RESOURCE_LOCATION $DATABASE_SERVER_NAME "$DATABASE_USERNAME" $DATABASE_PASSWORD
     if [ "$?" -ne 0 ]; then
         echo "Unable to setup database"
         exit 1
@@ -82,7 +82,7 @@ DB_HOST_FULL_NAME="$DATABASE_SERVER_NAME"".postgres.database.azure.com"
 (cd ../../db && export DB_HOST=$DB_HOST_FULL_NAME && export DB_USER="$DATABASE_USERNAME_AT_HOST" && export DB_PASS=$DATABASE_PASSWORD && ./install-db-resources.py --overwrite $DATABASE_NAME)
 
 # Setup app insights
-. ./Deploy-AppInsights.sh $RESOURCE_GROUP $APPINSIGHTS_NAME
+. ./Deploy-AppInsights.sh $RESOURCE_GROUP $RESOURCE_LOCATION $APPINSIGHTS_NAME
 if [ "$?" -ne 0 ]; then
     echo "Unable to setup app insights"
     exit 1
@@ -105,6 +105,7 @@ STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n $PROJEC
 PROJECT_STORAGE_ACCOUNT_KEY=$(az storage account keys list -n $PROJECT_STORAGE_ACCOUNT --query [0].value --resource-group $RESOURCE_GROUP)
 . ./Deploy-Python-Functions-App.sh \
         $RESOURCE_GROUP \
+        $RESOURCE_LOCATION \
         $FUNCTION_STORAGE_ACCOUNT \
         $FUNCTION_APP_NAME \
         $APPINSIGHTS_NAME \

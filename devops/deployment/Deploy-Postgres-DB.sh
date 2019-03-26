@@ -4,7 +4,7 @@
 set -e
 
 ResourceGroup=$1
-ResourceLocation$2
+ResourceLocation=$2
 ServerName=$3
 DBUserName=$4
 DBPassword=$5

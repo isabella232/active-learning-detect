@@ -37,28 +37,6 @@ if [[ "$StorageName" != *[a-z0-9]* ]]; then
     exit 1
 fi
 
-# See http://jmespath.org/tutorial.html for querying
-filtered_output=$(az extension list --query "[?name=='functionapp'].name")
-
-if [[ $filtered_output =~ "functionapp" ]];
-then
-    echo
-    echo "Removing existng Azure CLI extension..."
-    az extension remove -n functionapp
-fi
-
-TempDownloadLocation="/tmp/functionapp-0.0.2-py2.py3-none-any.whl"
-
-echo
-echo "Downloading Azure CLI extension for the Azure Functions Linux Consumption preview"
-echo
-curl -s -o $TempDownloadLocation "https://functionscdn.azureedge.net/public/docs/functionapp-0.0.2-py2.py3-none-any.whl"
-
-echo
-echo "Installing Azure CLI extension for the Azure Functions Linux Consumption preview"
-echo
-az extension add --yes --source $TempDownloadLocation
-
 echo
 echo "Create a resource group (if it does not exist for the current subscription)"
 echo
@@ -72,7 +50,7 @@ az storage account create -n $StorageName -l $ResourceLocation -g $ResourceGroup
 echo
 echo "Create a function app (if it does not exist for the current subscription)"
 echo
-az functionapp createpreviewapp -n $FunctionAppName -g $ResourceGroup -l $ResourceLocation-s $StorageName --runtime python --is-linux
+az functionapp create -n $FunctionAppName -g $ResourceGroup -c eastus -s $StorageName --runtime python --os-type Linux --deployment-container-image-name microsoft/azure-functions-python3.6:2.0
 
 echo
 echo "Retrieving App Insights Id for $AppInsightsName"

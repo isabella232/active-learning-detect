@@ -4,7 +4,7 @@
 set -e
 
 ResourceGroup=$1	
-ResourceLocation=$2
+ResourceLocation="westus2"
 AppInsightsName=$3
 
 # Check if any of the args are empty
@@ -18,4 +18,4 @@ az resource create \
     --resource-type "Microsoft.Insights/components" \
     --name $AppInsightsName \
     --location $ResourceLocation \
-    --properties '{"Application_Type":"other", "Flow_Type":"Redfield", "Request_Source":"IbizaAIExtension","HockeyAppId": null,"SamplingPercentage": null}'
+    --properties '{"Application_Type":"other", "Flow_Type":"Redfield", "Request_Source":"IbizaAIExtension"}'
